@@ -20,7 +20,7 @@ class Dog
     @@db
   end
 
-  def self.find(id)
+  def self.create_by_id(id)
     results = self.db.query ("
       SELECT *
       FROM dogs
@@ -29,42 +29,70 @@ class Dog
     Dog.new(results.first["name"], results.first["color"]).tap { |dog| dog.id = results.first["id"] }
   end
 
-  def find_by_name
-    self.db.query ("
+  def self.find_by_id(id)
+    results = self.db.query ("
       SELECT *
       FROM dogs
-      WHERE name = '#{@name}'
+      WHERE id = #{id}
     ")
+    self.results_from_query(results)
   end
 
-  def find_by_color
+  def self.find_by_name(name)
+    results = self.db.query ("
+      SELECT *
+      FROM dogs
+      WHERE name = '#{name}'
+    ")
+    self.results_from_query(results)
+  end
+
+  def self.find_by_color(color)
     self.db.query ("
       SELECT *
       FROM dogs
-      WHERE name = '#{@color}'
+      WHERE color = '#{color}'
     ")
+    self.results_from_query(results)
+  end
+
+  def self.results_from_query(results)
+    array = []
+    results.each do |dog|
+      array << dog
+    end
+    array
   end
 
   def insert
-    self.db.query ("
+    results = self.db.query ("
       INSERT INTO dogs(name, color)
       VALUES ('#{@name}', '#{@color}')
     ")
+    self.saved?(results)
+    self.add_obj_id
+  end
+
+  def add_obj_id
+    debugger
+    self.id = self.db.last_id if self.db.last_id > 0
   end
 
   def update
-    self.db.query ("
+    results = self.db.query ("
       UPDATE dogs
       SET name = '#{@name}', color = '#{@color}'
       WHERE id = #{@id};
     ")
+    self.saved?(results)
   end
 
   def delete
-    self.db.query ("
+    results = self.db.query ("
       DELETE FROM dogs
       WHERE id = #{id}
     ")
+    self.saved?(results)
   end
 
   def refactorings?
@@ -75,12 +103,20 @@ class Dog
     
   end
 
-  def saved?
-    
+  def saved?(results)
+    if results.nil?
+      true
+    else
+      return false
+    end
   end
 
-  def save! #(a smart method that knows the right thing to do)
-    
+  def save! # (a smart method that knows the right thing to do)
+    if self.id == nil
+      self.insert
+    else
+      self.update
+    end
   end
 
   def unsaved?
@@ -105,6 +141,6 @@ class Dog
 
 end
 
-dog = Dog.find(3)
+dog = Dog.create_by_id(5)
 debugger
 puts 'hi'
