@@ -1,4 +1,5 @@
 require 'mysql2'
+require 'debugger'
 
 class Dog
 
@@ -11,8 +12,16 @@ class Dog
     @color = color
   end
 
+  def self.db
+    @@db
+  end
+
   def self.find(id)
-    
+    self.db.query ("
+      SELECT *
+      FROM dogs
+      WHERE dogs.id = #{id}
+    ")
   end
 
 end
