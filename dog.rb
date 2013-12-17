@@ -20,14 +20,14 @@ class Dog
     @@db
   end
 
-  def self.create_by_id(id)
-    results = self.db.query ("
-      SELECT *
-      FROM dogs
-      WHERE id = #{id}
-    ")
-    Dog.new(results.first["name"], results.first["color"]).tap { |dog| dog.id = results.first["id"] }
-  end
+  # def self.create_by_id(id)
+  #   results = self.db.query ("
+  #     SELECT *
+  #     FROM dogs
+  #     WHERE id = #{id}
+  #   ")
+  #   Dog.new(results.first["name"], results.first["color"]).tap { |dog| dog.id = results.first["id"] }
+  # end
 
   def self.find_by_id(id)
     results = self.db.query ("
@@ -35,7 +35,7 @@ class Dog
       FROM dogs
       WHERE id = #{id}
     ")
-    self.results_from_query(results)
+    Dog.new(results.first["name"], results.first["color"]).tap { |dog| dog.id = results.first["id"] }
   end
 
   def self.find_by_name(name)
@@ -48,7 +48,7 @@ class Dog
   end
 
   def self.find_by_color(color)
-    self.db.query ("
+    results = self.db.query ("
       SELECT *
       FROM dogs
       WHERE color = '#{color}'
@@ -59,7 +59,7 @@ class Dog
   def self.results_from_query(results)
     array = []
     results.each do |dog|
-      array << dog
+      array << Dog.new(dog["name"], dog["color"]).tap { |dog_obj| dog_obj.id = dog["id"] }
     end
     array
   end
@@ -74,7 +74,6 @@ class Dog
   end
 
   def add_obj_id
-    debugger
     self.id = self.db.last_id if self.db.last_id > 0
   end
 
@@ -95,14 +94,6 @@ class Dog
     self.saved?(results)
   end
 
-  def refactorings?
-    
-  end
-
-  def new_from_db?
-    
-  end
-
   def saved?(results)
     if results.nil?
       true
@@ -120,16 +111,21 @@ class Dog
   end
 
   def unsaved?
-    
+    results = self.db.query ("
+      SELECT *
+      FROM dogs
+      WHERE id = #{@id}
+    ")
+    if results.first["name"] == @name && results.first["color"] == @color
+      return true
+    else
+      return false
+    end
   end
 
-  def mark_saved!
-    
-  end
-
-  def inspect
-    puts "Yo dawg, I am a dog named #{@name}"
-  end
+  # def inspect
+  #   puts "Yo dawg, I am a dog named #{@name}. Woof."
+  # end
 
   def reload
     
@@ -139,8 +135,12 @@ class Dog
     
   end
 
+  def new_from_db?
+    
+  end
+
 end
 
-dog = Dog.create_by_id(5)
+dog = Dog.find_by_id(5)
 debugger
 puts 'hi'
