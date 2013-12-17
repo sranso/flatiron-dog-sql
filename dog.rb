@@ -20,15 +20,6 @@ class Dog
     @@db
   end
 
-  # def self.create_by_id(id)
-  #   results = self.db.query ("
-  #     SELECT *
-  #     FROM dogs
-  #     WHERE id = #{id}
-  #   ")
-  #   Dog.new(results.first["name"], results.first["color"]).tap { |dog| dog.id = results.first["id"] }
-  # end
-
   def self.find_by_id(id)
     results = self.db.query ("
       SELECT *
