@@ -45,12 +45,11 @@ class Dog
     ")
   end
 
-  def find
-    
-  end
-
   def insert
-    
+    self.db.query ("
+      INSERT INTO dogs(name, color)
+      VALUES ('#{@name}', '#{@color}')
+    ")
   end
 
   def update
@@ -62,36 +61,50 @@ class Dog
   end
 
   def delete
+    self.db.query ("
+      DELETE FROM dogs
+      WHERE id = #{id}
+    ")
+  end
+
+  def refactorings?
     
   end
 
-  def destroy
+  def new_from_db?
+    
+  end
+
+  def saved?
+    
+  end
+
+  def save! #(a smart method that knows the right thing to do)
+    
+  end
+
+  def unsaved?
+    
+  end
+
+  def mark_saved!
+    
+  end
+
+  def inspect
+    puts "Yo dawg, I am a dog named #{@name}"
+  end
+
+  def reload
+    
+  end
+
+  def attributes
     
   end
 
 end
 
-dog = Dog.find(1)
-# dog.update
+dog = Dog.find(3)
 debugger
 puts 'hi'
-
-  # color, name, id
-  # db
-  # find_by_att
-  # find
-  # insert
-  # update
-  # delete/destroy
-
-  # refactorings?
-  # new_from_db?
-  # saved?
-  # save! (a smart method that knows the right thing to do)
-  # unsaved?
-  # mark_saved!
-  # ==
-  # inspect
-  # reload
-  # attributes
-
