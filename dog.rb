@@ -16,17 +16,63 @@ class Dog
     @@db
   end
 
+  def db
+    @@db
+  end
+
   def self.find(id)
+    results = self.db.query ("
+      SELECT *
+      FROM dogs
+      WHERE id = #{id}
+    ")
+    Dog.new(results.first["name"], results.first["color"]).tap { |dog| dog.id = results.first["id"] }
+  end
+
+  def find_by_name
     self.db.query ("
       SELECT *
       FROM dogs
-      WHERE dogs.id = #{id}
+      WHERE name = '#{@name}'
     ")
+  end
+
+  def find_by_color
+    self.db.query ("
+      SELECT *
+      FROM dogs
+      WHERE name = '#{@color}'
+    ")
+  end
+
+  def find
+    
+  end
+
+  def insert
+    
+  end
+
+  def update
+    self.db.query ("
+      UPDATE dogs
+      SET name = '#{@name}', color = '#{@color}'
+      WHERE id = #{@id};
+    ")
+  end
+
+  def delete
+    
+  end
+
+  def destroy
+    
   end
 
 end
 
-dog = Dog.find(10)
+dog = Dog.find(1)
+# dog.update
 debugger
 puts 'hi'
 
