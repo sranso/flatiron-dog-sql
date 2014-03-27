@@ -114,9 +114,9 @@ class Dog
     end
   end
 
-  # def inspect
-  #   puts "Yo dawg, I am a dog named #{@name}. Woof."
-  # end
+  def inspect
+    puts "Yo dawg, I am a dog named #{@name}. Woof."
+  end
 
   def reload
     
